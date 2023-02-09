@@ -6,7 +6,7 @@ const app = ({ Component, pageProps }: AppProps) => {
   return (
     <>
       <GlobalStyle />
-      <Header />\
+      <Header />
       <Component {...pageProps} />
     </>
   );
