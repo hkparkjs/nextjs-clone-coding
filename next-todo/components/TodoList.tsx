@@ -2,6 +2,8 @@ import React, { useMemo, useCallback } from 'react';
 import styled from 'styled-components';
 import { TodoType } from '../types/todo';
 import palette from '../styles/palette';
+import TrashCanIcon from '../public/statics/svg/trash_can.svg';
+import CheckMarkIcon from '../public/statics/svg/check_mark.svg';
 
 const Container = styled.div`
   width: 100%;
@@ -91,7 +93,20 @@ const Container = styled.div`
       .todo-right-side {
         display: flex;
         margin-right: 12px;
-
+        svg {
+          &:first-child {
+            margin-right: 16px;
+          }
+        }
+        .todo-trash-can {
+          width: 16px;
+          path {
+            fill: ${palette.deep_red};
+          }
+        }
+        .todo-check-mark {
+          fill: ${palette.deep_green};
+        }
         .todo-button {
           width: 20px;
           height: 20px;
@@ -199,6 +214,12 @@ const TodoList: React.FC<IProps> = ({ todos }) => {
               </p>
             </div>
               <div className="todo-right-side">
+                {todo.checked && (
+                  <>
+                    <TrashCanIcon className="todo-trash-can" onClick={() => {}} />
+                    <CheckMarkIcon className="todo-check-mark" onClick={() => {}} />
+                  </>
+                )}
                 {!todo.checked && (
                   <button
                     type="button"
