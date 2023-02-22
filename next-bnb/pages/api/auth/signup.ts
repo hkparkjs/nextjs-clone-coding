@@ -21,7 +21,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     const users = Data.user.getList();
-    console.log(users);
+    // console.log(users);
     let userId;
     if (users.length === 0) {
       userId = 1;
@@ -47,8 +47,14 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         Date.now() + 60 * 60 * 24 * 1000 * 3 //3일
       ).toUTCString()}; httponly`
     );
-    return res.end();
+
+    const newUserWithoutPassword: Partial<Pick<StoredUserType, "password">> = newUser;
+    delete newUserWithoutPassword.password;
+
+    res.statusCode = 200;
+    return res.send(newUser);
   }
+
   res.statusCode = 405;
 
   return res.end();

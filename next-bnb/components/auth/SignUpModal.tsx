@@ -11,6 +11,8 @@ import { dayList, monthList, yearList } from '../../lib/staticData';
 import Selector from '../common/Selector';
 import Button from '../common/Button';
 import { signupAPI } from '../../lib/api/auth';
+import { useDispatch } from 'react-redux';
+import { userActions } from '../../store/user';
 
 const Container = styled.form`
   width: 568px;
@@ -81,6 +83,8 @@ const SignUpModal: React.FC = () => {
   const [birthMonth, setBirthMonth] = useState<string | undefined>();
   const [birthDay, setBirthDay] = useState<string | undefined>();
 
+  const dispatch = useDispatch();
+
   //* 비밀번호 숨김 토글하기
   const toggleHidePassword = () => {
     setHidePassword(!hidePassword);
@@ -122,7 +126,9 @@ const SignUpModal: React.FC = () => {
         ).toString(),
       };
 
-      await signupAPI(signUpBody);
+      const { data } = await signupAPI(signUpBody);
+
+      dispatch(userActions.setLoggedUser(data));
 
     } catch (e) {
       console.log(e);
