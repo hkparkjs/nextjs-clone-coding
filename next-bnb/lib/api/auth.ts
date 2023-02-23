@@ -20,3 +20,6 @@ export const loginAPI = (body: { email: string; password: string }) => axios.pos
 /* TODO : http://localhost:3000/을 붙이지 않으면 (AxiosError: connect ECONNREFUSED 127.0.0.1:80) 발생
           없앴을 때도 동작하도록 확인필요. */
 export const meAPI = () => axios.get<UserType>("http://localhost:3000/api/auth/me");
+
+//* 로그아웃 api
+export const logoutAPI = () => axios.delete("/api/auth/logout");
