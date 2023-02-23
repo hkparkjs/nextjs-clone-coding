@@ -10,6 +10,7 @@ import Input from '../common/Input';
 import { useDispatch } from 'react-redux';
 import { authActions } from '../../store/auth';
 import { loginAPI } from '../../lib/api/auth';
+import useValidateMode from '../../hooks/useValidateMode';
 
 const Container = styled.form`
   width: 568px;
@@ -57,6 +58,8 @@ const LoginModal: React.FC<IProps> = ({ closeModal }) => {
   const [isPasswordHided, setIsPasswordHided] = useState(true);
   const dispatch = useDispatch();
 
+  const { setValidateMode } = useValidateMode();
+
   //* 이메일 주소 변경시
   const onChangeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -79,6 +82,8 @@ const LoginModal: React.FC<IProps> = ({ closeModal }) => {
   //* 로그인 클릭 시
   const onSubmitLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    setValidateMode(true);
 
     if (!email || !password) {
       alert("이메일과 비밀번호를 입력해주세요.");
@@ -104,6 +109,8 @@ const LoginModal: React.FC<IProps> = ({ closeModal }) => {
           type="email"
           icon={<MailIcon />}
           onChange={onChangeEmail}
+          isValid={email !== ""}
+          errorMessage="이메일이 필요합니다."
         />
       </div>
       <div className="login-input-wrapper login-password-input-wrapper">
@@ -120,6 +127,8 @@ const LoginModal: React.FC<IProps> = ({ closeModal }) => {
           }
           value={password}
           onChange={onChangePassword}
+          isValid={password !== ""}
+          errorMessage="비밀번호를 입력하세요."
         />
       </div>
       <div className="login-modal-submit-button-wrapper">
