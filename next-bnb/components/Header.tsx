@@ -14,6 +14,8 @@ import AuthModal from './auth/AuthModal';
 import OutsideClickHandler from 'react-outside-click-handler';
 import { logoutAPI } from '../lib/api/auth';
 import { userActions } from '../store/user';
+import HeaderAuths from './HeaderAuths';
+import HeaderUserProfile from './HeaderUserProfile';
 
 const Container = styled.div`
   position: sticky;
@@ -144,7 +146,7 @@ const Container = styled.div`
 
 const Header: React.FC = () => {
   const { openModal, ModalPortal, closeModal } = useModal();
-  const user = useSelector((state) => state.user);
+  const isLogged = useSelector((state) => state.user.isLogged);
   const dispatch = useDispatch();
   const [isUsermenuOpened, setIsUsermenuOpened] = useState(false);
 
@@ -165,70 +167,8 @@ const Header: React.FC = () => {
         <AirbnbLogoTextIcon />
       </div>
       </Link>
-      {!user.isLogged && (
-        <div className="header-auth-buttons">
-          <button
-            type="button"
-            className="header-sign-up-button"
-            onClick={() => {
-              dispatch(authActions.setAuthMode("signup"));
-              openModal();
-            }}
-          >
-            회원가입
-          </button>
-          <button
-            type="button"
-            className="header-login-button"
-            onClick={() => {
-              dispatch(authActions.setAuthMode("login"));
-              openModal();
-            }}
-          >
-            로그인
-          </button>
-        </div>
-      )}
-      {user.isLogged && (
-        <OutsideClickHandler
-          onOutsideClick={() => {
-            if (isUsermenuOpened) {
-              setIsUsermenuOpened(false);
-            }
-          }}
-        >
-          <button
-            className="header-user-profile"
-            type="button"
-            onClick={() => setIsUsermenuOpened(!isUsermenuOpened)}
-          >
-            <HamburgerIcon />
-            <img
-              src={user.profileImage}
-              className="header-user-profile-image"
-              alt=""
-            />
-          </button>
-          {isUsermenuOpened && (
-            <ul className="header-usermenu">
-              <li>숙소 관리</li>
-              <Link
-                href="/room/register/building"
-                role="presentation"
-                onClick={() => {
-                  setIsUsermenuOpened(false);
-                }}
-              >
-                <li>숙소 등록하기</li>
-              </Link>
-              <div className="header-usermenu-divider" />
-              <li role="presentation" onClick={logout}>
-                로그아웃
-              </li>
-            </ul>
-          )}
-        </OutsideClickHandler>
-      )}
+      {!isLogged && <HeaderAuths />}
+      {isLogged && <HeaderUserProfile />}
       <ModalPortal>
         <AuthModal closeModal={closeModal} />
       </ModalPortal>

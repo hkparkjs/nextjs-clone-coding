@@ -105,6 +105,10 @@ const SignUpModal: React.FC<IProps> = ({ closeModal }) => {
 
   const dispatch = useDispatch();
 
+  const disableMonths = ["월"];
+  const disableDays = ["일"];
+  const disableYears = ["년"];
+
   useEffect(() => {
     return () => {
       setValidateMode(false);
@@ -313,7 +317,7 @@ const SignUpModal: React.FC<IProps> = ({ closeModal }) => {
         <div className="sign-up-modal-birthday-month-selector">
           <Selector
             options={monthList}
-            disabledOptions={["월"]}
+            disabledOptions={disableMonths}
             defaultValue="월"
             value={birthMonth}
             onChange={onChangeBirthMonth}
@@ -323,7 +327,7 @@ const SignUpModal: React.FC<IProps> = ({ closeModal }) => {
         <div className="sign-up-modal-birthday-day-selector">
           <Selector
             options={dayList}
-            disabledOptions={["일"]}
+            disabledOptions={disableDays}
             defaultValue="일"
             value={birthDay}
             onChange={onChangeBirthDay}
@@ -333,7 +337,7 @@ const SignUpModal: React.FC<IProps> = ({ closeModal }) => {
         <div className="sign-up-modal-birthday-year-selector">
           <Selector
             options={yearList}
-            disabledOptions={["년"]}
+            disabledOptions={disableYears}
             defaultValue="년"
             value={birthYear}
             onChange={onChangeBirthYear}
