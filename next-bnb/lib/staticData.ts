@@ -19,3 +19,13 @@ export const dayList = Array.from(Array(31), (_, i) => String(i + 1));
 
 //* 2023년부터 1900년까지
 export const yearList = Array.from(Array(124), (_, i) => String(2023 - i));
+
+//* 숙소 큰 범위의 건물 유형
+export const largeBuildingTypeList = [
+  "아파트",
+  "주택",
+  "별채",
+  "독특한 숙소",
+  "B&B",
+  "부티크호텔",
+];
