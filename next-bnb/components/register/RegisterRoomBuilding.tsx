@@ -7,6 +7,7 @@ import { useSelector } from '../../store';
 import { registerRoomActions } from '../../store/registerRoom';
 import { useDispatch } from 'react-redux';
 import RadioGroup from '../common/RadioGroup';
+import RegisterRoomFooter from './RegisterRoomFooter';
 
 const Container = styled.div`
   padding: 62px 30px 100px;
@@ -141,6 +142,13 @@ const RegisterRoomBuilding: React.FC = () => {
   const onChangeIsSetUpForGuest = (value: any) => {
     dispatch(registerRoomActions.setIsSetUpForGuest(value));
   };
+  //* 모든 값이 있는지 확인하기
+  const isValid = useMemo(() => {
+    if (!largeBuildingType || !buildingType || !roomType || !(isSetUpForGuest === null)) {
+      return false;
+    }
+    return true;
+  }, [largeBuildingType, buildingType, roomType, isSetUpForGuest]);
 
   return (
     <Container>
@@ -148,6 +156,7 @@ const RegisterRoomBuilding: React.FC = () => {
       <h3>1단계</h3>
       <div className="register-room-building-selector-wrapper">
         <Selector
+          isValid={!!largeBuildingType}
           type="register"
           value={largeBuildingType || undefined}
           defaultValue="하나를 선택해주세요."
@@ -159,6 +168,7 @@ const RegisterRoomBuilding: React.FC = () => {
       </div>
       <div className="register-room-building-selector-wrapper">
         <Selector
+          isValid={!!buildingType}
           type="register"
           value={buildingType || undefined}
           onChange={onChangeBuilingType}
@@ -170,6 +180,7 @@ const RegisterRoomBuilding: React.FC = () => {
       {buildingType && (
         <div className="register-room-room-type-radio">
           <RadioGroup
+            isValid={!!roomType}
             label="게스트가 묵게 될 숙소 유형을 골라주세요."
             value={roomType}
             onChange={onChangeRoomType}
@@ -179,12 +190,18 @@ const RegisterRoomBuilding: React.FC = () => {
       )}
       <div className="register-room-is-setup-for-guest-radio">
         <RadioGroup
+          isValid={isSetUpForGuest !== null}
           label="게스트만 사용하도록 만들어진 숙소인가요?"
           value={isSetUpForGuest}
           onChange={onChangeIsSetUpForGuest}
           options={isSetUpForGuestOptions}
         />
       </div>
+      <RegisterRoomFooter
+        isValid={false}
+        prevHref="/"
+        nextHref="/room/register/bedrooms"
+      />
     </Container>
   );
 };

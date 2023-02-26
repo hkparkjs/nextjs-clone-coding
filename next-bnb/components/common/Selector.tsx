@@ -3,7 +3,7 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import palette from '../../styles/palette';
 import { useSelector } from '../../store';
-import WarningIcon from '../../public/static/svg/common/selector/warning.svg';
+import WarningIcon from '../../public/static/svg/common/warning.svg';
 
 const normalSelectorStyle = css`
   width: 100%;
@@ -90,7 +90,7 @@ const Container = styled.div<SelectorContainerProps>`
       cursor: not-allowed;
     }
   }
-  .selector_warning {
+  .selector-warning {
     margin-top: 8px;
     display: flex;
     align-items: center;
