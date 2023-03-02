@@ -52,8 +52,10 @@ const RegisterRoomFooter: React.FC<IProps> = ({
   const onClickNext = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
-    event.preventDefault();
-    setValidateMode(true);
+    if (!isValid) {
+      event.preventDefault();
+      setValidateMode(true);
+    }
   };
 
   return (
