@@ -8,6 +8,7 @@ import Button from '../../common/Button';
 import { uploadFileAPI } from '../../../lib/api/file';
 import { useDispatch } from 'react-redux';
 import { registerRoomActions } from '../../../store/registerRoom';
+import RegisterRoomPhotoCardList from './RegisterRoomPhotoCardList';
 
 const Container = styled.div`
   padding: 62px 30px 100px;
@@ -92,6 +93,7 @@ const RegisterRoomPhoto: React.FC = () => {
           </>
         </div>
       )}
+      {!isEmpty(photos) && <RegisterRoomPhotoCardList photos={photos} />}
     </Container>
   );
 };
