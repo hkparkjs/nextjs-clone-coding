@@ -24,6 +24,7 @@ type RegisterRoomState = {
   amenities: string[];
   conveniences: string[];
   photos: string[];
+  description: string;
 };
 
 //* 초기 상태
@@ -71,7 +72,14 @@ const initialState: RegisterRoomState = {
   //* 편의 공간
   conveniences: [],
   //* 숙소 사진
-  photos: [],
+  photos: [
+    "https://hkparkjs-bucket.s3.ap-southeast-2.amazonaws.com/IMG_6671__5955efc2-4c06-4b11-bd2f-4ea059ae8e98.jpeg",
+    "https://hkparkjs-bucket.s3.ap-southeast-2.amazonaws.com/IMG_7974__d873f4ff-2f48-4adc-9946-00224ff6d6d1.jpeg",
+    "https://hkparkjs-bucket.s3.ap-southeast-2.amazonaws.com/IMG_8065__f8e60916-9716-4291-90f1-7b61d458e1e1.jpeg",
+    "https://hkparkjs-bucket.s3.ap-southeast-2.amazonaws.com/IMG_8250__a786f00c-4b59-48ab-b926-50e16395a0ea.jpeg",
+  ],
+  //* 숙소 설명
+  description: "",
 };
 
 const registerRoom = createSlice({
@@ -224,6 +232,10 @@ const registerRoom = createSlice({
     //* 숙소 사진 변경하기
     setPhotos(state, action: PayloadAction<string[]>) {
       state.photos = action.payload;
+    },
+    //* 숙소 설명 변경하기
+    setDescription(state, action: PayloadAction<string>) {
+      state.description = action.payload;
     }
   },
 });
