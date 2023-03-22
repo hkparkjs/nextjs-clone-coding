@@ -41,7 +41,7 @@ const Container = styled.div`
     background-position: top right;
   }
   .react-datepicker__navigation-icon {
-    display: none;
+    display: none !important;
   }
   .react-datepicker__navigation--next {
     top: 40px;
