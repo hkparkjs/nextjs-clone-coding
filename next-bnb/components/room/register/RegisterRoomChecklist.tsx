@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import { useSelector } from '../../../store';
+import isEmpty from 'lodash/isEmpty';
 import RegisterRoomCheckStep from './RegisterRoomCheckStep';
 import RegisterRoomFooter from './RegisterRoomFooter';
 import RegisterRoomSubmitFooter from './RegisterRoomSubmitFooter';
@@ -288,7 +289,3 @@ const RegisterRoomChecklist: React.FC = () => {
 };
 
 export default RegisterRoomChecklist;
-
-function isEmpty(photos: string[]): boolean {
-  throw new Error('Function not implemented.');
-}
