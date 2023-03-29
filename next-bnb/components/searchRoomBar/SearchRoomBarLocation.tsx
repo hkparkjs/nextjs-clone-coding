@@ -1,11 +1,13 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import OutsideClickHandler from 'react-outside-click-handler';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { useSelector } from '../../store';
 import { searchRoomActions } from '../../store/searchRoom';
+import isEmpty from 'lodash/isEmpty';
 
 import palette from '../../styles/palette';
+import { searchPlacesAPI } from '../../lib/api/map';
 
 const Container = styled.div`
   position: relative;
@@ -78,6 +80,11 @@ const SearchBarRoomLocation: React.FC = () => {
     dispatch(searchRoomActions.setLocation(value));
   };
   const [popupOpened, setPopupOpened] = useState(false);
+  const [results, setResults] = useState<
+  {
+    description: string;
+    placeId: string;
+  }[]>([]);
 
   const onClickInput = () => {
     if (inputRef.current) {
@@ -85,6 +92,21 @@ const SearchBarRoomLocation: React.FC = () => {
     }
     setPopupOpened(true);
   };
+  const searchPlaces = async () => {
+    try {
+      const { data } = await searchPlacesAPI(encodeURI(location));
+      setResults(data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  //* 검색어가 변하면 장소를 검색
+  useEffect(() => {
+    if (location) {
+      //* 장소 검색하기
+      searchPlaces();
+    }
+  }, [location]);
 
   return (
     <Container onClick={onClickInput}>
@@ -98,9 +120,14 @@ const SearchBarRoomLocation: React.FC = () => {
             placeholder="어디로 여행 가세요?"
           />
         </div>
-        {popupOpened && (
+        {popupOpened && location !== "근처 추천 장소" && (
           <ul className="search-room-bar-location-results">
-            <li>근처 추천 장소</li>
+            {!location && <li>근처 추천 장소</li>}
+            {!isEmpty(results) &&
+              results.map((result, index) => (
+                <li key={index}>{result.description}</li>
+              ))}
+            {location && isEmpty(results) && <li>검색 결과가 없습니다.</li>}
           </ul>
         )}
       </OutsideClickHandler>
