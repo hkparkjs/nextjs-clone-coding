@@ -3,11 +3,12 @@ import OutsideClickHandler from 'react-outside-click-handler';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { useSelector } from '../../store';
-import { searchRoomActions } from '../../store/searchRoom';
+import searchRoom, { searchRoomActions } from '../../store/searchRoom';
 import isEmpty from 'lodash/isEmpty';
 
 import palette from '../../styles/palette';
-import { searchPlacesAPI } from '../../lib/api/map';
+import { searchPlacesAPI, getPlaceAPI } from '../../lib/api/map';
+import useDebounce from '../../hooks/useDebounce';
 
 const Container = styled.div`
   position: relative;
@@ -75,9 +76,46 @@ const SearchBarRoomLocation: React.FC = () => {
 
   const inputRef = useRef<HTMLInputElement | null>(null);
 
+  const searchKeyword = useDebounce(location, 150);
+
   //* 위치 변경 dispatch
   const setLocationDispatch = (value: string) => {
     dispatch(searchRoomActions.setLocation(value));
+  };
+  //* 위도 변경 dispatch
+  const setLatitudeDispatch = (value: number) => {
+    dispatch(searchRoomActions.setLatitude(value));
+  };
+  //* 경도 변경 dispatch
+  const setLongitudeDispatch = (value: number) => {
+    dispatch(searchRoomActions.setLongitude(value));
+  };
+
+  //* 근처 추천 장소 클릭 시
+  const onClickNearPlaces = () => {
+    setPopupOpened(false);
+    navigator.geolocation.getCurrentPosition(
+      ({ coords }) => {
+        setLocationDispatch("근처 추천 장소");
+        setLatitudeDispatch(coords.latitude);
+        setLongitudeDispatch(coords.longitude);
+      },
+      (e) => {
+        console.log(e);
+      }
+    );
+  };
+  //* 검색된 장소 클릭 시
+  const onClickResult = async (placeId: string) => {
+    try {
+      const { data } = await getPlaceAPI(placeId);
+      setLocationDispatch(data.location);
+      setLatitudeDispatch(data.latitude);
+      setLongitudeDispatch(data.longitude);
+      setPopupOpened(false);
+    } catch (e) {
+      console.log(e);
+    }
   };
   const [popupOpened, setPopupOpened] = useState(false);
   const [results, setResults] = useState<
@@ -102,11 +140,13 @@ const SearchBarRoomLocation: React.FC = () => {
   };
   //* 검색어가 변하면 장소를 검색
   useEffect(() => {
-    if (location) {
-      //* 장소 검색하기
+    if (!searchKeyword) {
+      setResults([]);
+    }
+    if (searchKeyword) {
       searchPlaces();
     }
-  }, [location]);
+  }, [searchKeyword]);
 
   return (
     <Container onClick={onClickInput}>
@@ -122,10 +162,14 @@ const SearchBarRoomLocation: React.FC = () => {
         </div>
         {popupOpened && location !== "근처 추천 장소" && (
           <ul className="search-room-bar-location-results">
-            {!location && <li>근처 추천 장소</li>}
+            {!location && (
+              <li role="presentation" onClick={onClickNearPlaces}>
+                근처 추천 장소
+              </li>
+            )}
             {!isEmpty(results) &&
               results.map((result, index) => (
-                <li key={index}>{result.description}</li>
+                <li key={index} onClick={() => onClickResult(result.placeId)}>{result.description}</li>
               ))}
             {location && isEmpty(results) && <li>검색 결과가 없습니다.</li>}
           </ul>
