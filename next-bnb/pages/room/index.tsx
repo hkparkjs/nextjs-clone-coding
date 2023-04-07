@@ -1,10 +1,8 @@
 import React from 'react';
 import { NextPage } from 'next';
-import { wrapper } from '../../store';
 import RoomMain from '../../components/room/main/RoomMain';
 import { getRoomListAPI } from '../../lib/api/room';
 import { roomActions } from '../../store/room';
-
 
 const index: NextPage = () => {
   return <RoomMain />;
@@ -38,6 +36,7 @@ index.getInitialProps = async ({ store, query }) => {
         ? encodeURI(query.location as string)
         : undefined,
     });
+    store.dispatch(roomActions.setRooms(data));
   } catch (e) {
     console.log(e);
   }
