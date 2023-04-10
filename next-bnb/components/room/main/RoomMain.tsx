@@ -5,8 +5,11 @@ import MapIcon from '../../../public/static/svg/room/main/map.svg';
 import palette from '../../../styles/palette';
 import { useSelector } from '../../../store';
 import RoomList from './RoomList';
+import dynamic from 'next/dynamic';
 
-const Container = styled.div`
+const RoomListMap = dynamic(() => import("./RoomListMap"), { ssr: false });
+
+const Container = styled.div<{ showMap: boolean }>`
   padding: 50px 80px;
   margin: auto;
 
@@ -62,7 +65,39 @@ const Container = styled.div`
   .room-list-wrapper {
     display: flex;
   }
+
+  ${({ showMap }) =>
+    showMap &&
+    css `
+      width: 840px;
+      padding: 50px 24px;
+      margin: 0;
+    `}
+  .flex {
+    display: flex;
+  }
 `;
+const RoomListPage: React.FC = () => {
+  const [showMap, setShowMap] = useState(false);
+
+  <Container showMap={showMap}>
+    {!showMap && (
+      <button
+        type="button"
+        className="room-list-show-map-button"
+        onClick={() => {
+          setShowMap(!showMap);
+        }}
+      >
+        <MapIcon /> 지도 표시하기
+      </button>
+    )}
+    <div className="room-list-wrapper">
+      <RoomList showMap={showMap} />
+      {showMap && <RoomListMap showMap={showMap} setShowMap={setShowMap} />}
+    </div>
+  </Container>
+};
 
 const RoomMain: React.FC = () => {
   const rooms = useSelector(state => state.room.rooms);
@@ -82,7 +117,7 @@ const RoomMain: React.FC = () => {
   }`;
 
   return (
-    <Container>
+    <Container showMap={showMap}>
       <p className="room-list-info">{getRoomListInfo}</p>
       <h1 className="room-list-title">숙소</h1>
       <div className="room-list-buttons">
@@ -90,18 +125,21 @@ const RoomMain: React.FC = () => {
           <button type="button">숙소 유형</button>
           <button type="button">요금</button>
         </div>
-        <button
-          type="button"
-          className="room-list-show-map-button"
-          onClick={() => {
-            setShowMap(!showMap);
-          }}
-        >
-          <MapIcon /> 지도 표시하기
-        </button>
+        {!showMap && (
+          <button
+            type="button"
+            className="room-list-show-map-button"
+            onClick={() => {
+              setShowMap(!showMap);
+            }}
+          >
+            <MapIcon /> 지도 표시하기
+          </button>
+        )}
       </div>
       <div className="room-list-wrapper">
-        <RoomList />
+        <RoomList showMap={showMap} />
+        {showMap && <RoomListMap showMap={showMap} setShowMap={setShowMap} />}
       </div>
     </Container>
   );

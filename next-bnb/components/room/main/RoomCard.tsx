@@ -103,7 +103,7 @@ const Container = styled.li<{ showMap: boolean }>`
           white-space: break-spaces;
           margin-bottom: 11px;
         }
-        .room-card-text-dividier {
+        .room-card-text-divider {
           width: 32px;
           height: 1px;
           margin-bottom: 10px;
