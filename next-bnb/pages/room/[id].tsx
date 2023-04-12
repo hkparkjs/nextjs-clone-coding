@@ -1,9 +1,10 @@
 import { NextPage } from 'next';
 import { getRoomAPI } from '../../lib/api/room';
 import { roomActions } from '../../store/room';
+import RoomDetail from '../../components/room/detail/RoomDetail';
 
 const roomDetail: NextPage = () => {
-  return <div />;
+  return <RoomDetail />;
 };
 
 roomDetail.getInitialProps = async ({ query, store }) => {
@@ -12,6 +13,7 @@ roomDetail.getInitialProps = async ({ query, store }) => {
   try {
     if (id) {
       const { data } = await getRoomAPI(Number(id as string));
+      // console.log(data);
       store.dispatch(roomActions.setDetailRoom(data));
     }
   } catch (e) {
@@ -19,3 +21,5 @@ roomDetail.getInitialProps = async ({ query, store }) => {
   }
   return {};
 };
+
+export default roomDetail;

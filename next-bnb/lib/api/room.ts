@@ -28,4 +28,4 @@ export const getRoomListAPI = (queries: GetRoomListAPIQueries) => {
 };
 
 //* 숙소 하나 불러오기
-export const getRoomAPI = (roomId: number) => axios.get<RoomType>(`/api/rooms/${roomId}`);
+export const getRoomAPI = (roomId: number) => axios.get<RoomType>(`http://localhost:3000/api/rooms/${roomId}`);
