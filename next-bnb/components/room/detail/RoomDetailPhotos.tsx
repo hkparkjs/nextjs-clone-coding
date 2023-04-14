@@ -84,7 +84,6 @@ const Container = styled.div`
 const RoomDetailPhotos: React.FC = () => {
   const roomTitle = useSelector(state => state.room.detail?.title);
   const photos = useSelector(state => state.room.detail?.photos);
-  console.log(photos.length)
   if (!photos) {
     return null;
   }
