@@ -157,6 +157,9 @@ const RoomDetailReservation: React.FC = () => {
   const checkInRef = useRef<HTMLLabelElement>(null);
   const checkOutRef = useRef<HTMLLabelElement>(null);
 
+  const userId = useSelector(state => state.user.id);
+  const price = useSelector(state => state.room.detail?.price);
+
   //* 예약하기 클릭 시
   const onClickReservationButton = async () => {
     if (checkInRef.current && !startDate) {
@@ -268,9 +271,25 @@ const RoomDetailReservation: React.FC = () => {
           </OutsideClickHandler>
         </div>
       </div>
-      <Button color="amaranth" width="100%" onClick={onClickReservationButton}>
+      <Button color="amaranth" width="100%" onClick={onClickReservation}>
         {startDate && endDate ? "예약하기" : "예약 가능 여부 보기"}
       </Button>
+      {startDate && endDate && (
+        <>
+          <p className="room-detail-reservation-price-date">
+            {price} X {endDate.getDay() - startDate.getDay()}박
+            <span>
+              {Number(price) * (endDate.getDay() - startDate.getDay())}
+            </span>
+          </p>
+            <p className="room-detail-reservation-total-price">
+              총 합계
+              <span>
+                {Number(price) * (endDate.getDay() - startDate.getDay())}
+              </span>
+            </p>
+        </>
+      )}
     </Container>
   );
 };
