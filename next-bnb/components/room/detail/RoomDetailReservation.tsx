@@ -6,6 +6,8 @@ import Button from '../../common/Button';
 import { useSelector } from '../../../store';
 import OutsideClickHandler from 'react-outside-click-handler';
 import Counter from '../../common/Counter';
+import useModal from '../../../hooks/useModal';
+import AuthModal from '../../auth/AuthModal';
 
 const Container = styled.div`
   position: sticky;
@@ -160,6 +162,14 @@ const RoomDetailReservation: React.FC = () => {
   const userId = useSelector(state => state.user.id);
   const price = useSelector(state => state.room.detail?.price);
 
+  const { openModal, ModalPortal, closeModal } = useModal();
+
+  const onClickReservation = async () => {
+    if (!userId) {
+      openModal();
+    }
+  };
+
   //* 예약하기 클릭 시
   const onClickReservationButton = async () => {
     if (checkInRef.current && !startDate) {
@@ -290,6 +300,9 @@ const RoomDetailReservation: React.FC = () => {
             </p>
         </>
       )}
+      <ModalPortal>
+        <AuthModal closeModal={closeModal} />
+      </ModalPortal>
     </Container>
   );
 };
