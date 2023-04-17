@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
 import DatePicker from '../../common/DatePicker';
 import palette from '../../../styles/palette';
@@ -145,6 +145,20 @@ const Container = styled.div`
 `;
 
 const RoomDetailReservation: React.FC = () => {
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
+  const checkInRef = useRef<HTMLLabelElement>(null);
+  const checkOutRef = useRef<HTMLLabelElement>(null);
+
+  //* 예약하기 클릭 시
+  const onClickReservationButton = async () => {
+    if (checkInRef.current && !startDate) {
+      checkInRef.current.focus();
+    } else if (checkOutRef.current && !endDate) {
+      checkOutRef.current.focus();
+    }
+  };
+
   const room = useSelector(state => state.room.detail);
   if (!room) {
     return null;
@@ -158,24 +172,35 @@ const RoomDetailReservation: React.FC = () => {
       <div className="room-detail-reservation-inputs">
         <div className="room-detail-reservation-date-inputs">
           <div className="room-detail-reservation-check-in">
-            <label>
+            <label ref={checkInRef}>
               체크인
               <DatePicker
                 placeholderText="날짜 추가"
                 popperPlacement="top-end"
-                disabledKeyboardNavigation
-                onChange={() => {}}
+                selected={startDate}
+                onChange={(date) => setStartDate(date as Date)}
+                openToDate={new Date()}
+                selectsStart
+                endDate={new Date(endDate as Date)}
+                minDate={new Date(room.startDate)}
+                maxDate={new Date(room.endDate)}
               />
             </label>
           </div>
           <div className="room-detail-reservation-check-out">
-            <label>
+            <label ref={checkOutRef}>
               체크아웃
               <DatePicker
                 placeholderText="날짜 추가"
                 popperPlacement="top-end"
-                disabledKeyboardNavigation
-                onChange={() => {}}
+                selected={endDate}
+                onChange={(date) => setEndDate(date as Date)}
+                selectsEnd
+                openToDate={new Date()}
+                startDate={startDate as Date}
+                endDate={new Date(endDate as Date)}
+                minDate={new Date(startDate as Date)}
+                maxDate={new Date(room.endDate)}
               />
             </label>
           </div>
@@ -187,8 +212,8 @@ const RoomDetailReservation: React.FC = () => {
           </div>
         </div>
       </div>
-      <Button color="amaranth" width="100%" onClick={() => {}}>
-        예약하기
+      <Button color="amaranth" width="100%" onClick={onClickReservationButton}>
+        {startDate && endDate ? "예약하기" : "예약 가능 여부 보기"}
       </Button>
     </Container>
   );
