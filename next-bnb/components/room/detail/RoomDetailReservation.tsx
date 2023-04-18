@@ -8,6 +8,8 @@ import OutsideClickHandler from 'react-outside-click-handler';
 import Counter from '../../common/Counter';
 import useModal from '../../../hooks/useModal';
 import AuthModal from '../../auth/AuthModal';
+import { makeReservationAPI } from '../../../lib/api/reservation';
+import Router from 'next/router';
 
 const Container = styled.div`
   position: sticky;
@@ -172,10 +174,29 @@ const RoomDetailReservation: React.FC = () => {
 
   //* 예약하기 클릭 시
   const onClickReservationButton = async () => {
-    if (checkInRef.current && !startDate) {
+    if (!userId) {
+      openModal();
+    } else if (checkInRef.current && !startDate) {
       checkInRef.current.focus();
     } else if (checkOutRef.current && !endDate) {
       checkOutRef.current.focus();
+    } else {
+      try {
+        const body = {
+          roomId: room.id,
+          userId,
+          checkInDate: startDate!.toISOString(),
+          checkOutDate: endDate!.toISOString(),
+          adultCount,
+          childrenCount,
+          infantsCount,
+        };
+        await makeReservationAPI(body);
+        alert("숙소 등록을 완료하였습니다.");
+        Router.push("/");
+      } catch (e) {
+        console.log(e);
+      }
     }
   };
 
@@ -281,7 +302,7 @@ const RoomDetailReservation: React.FC = () => {
           </OutsideClickHandler>
         </div>
       </div>
-      <Button color="amaranth" width="100%" onClick={onClickReservation}>
+      <Button color="amaranth" width="100%" onClick={onClickReservationButton}>
         {startDate && endDate ? "예약하기" : "예약 가능 여부 보기"}
       </Button>
       {startDate && endDate && (
